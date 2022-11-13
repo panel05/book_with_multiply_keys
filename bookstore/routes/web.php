@@ -27,31 +27,31 @@ Route::get('/dashboard', function () {
 
 //ADMIN
 Route::middleware( ['admin'])->group(function () {
-    //könyvek
+    //books
     Route::get('/api/books/{id}', [BookController::class, 'show']);
     Route::post('/api/books', [BookController::class, 'store']);
     Route::put('/api/books/{id}', [BookController::class, 'update']);
     Route::delete('/api/books/{id}', [BookController::class, 'destroy']);
-    
-    Route::get('/api/book_copies/{title}', [BookController::class, 'bookCopies']);
-});
-
-//SIMPLE USER
-Route::middleware(['auth.basic'])->group(function () {
+    //copies
     Route::apiResource('/api/copies', CopyController::class);
-    //felhasználó    
-    Route::apiResource('/api/users', UserController::class);
-    Route::patch('/api/users/password/{id}', [UserController::class, 'updatePassword']);
+    //queries
+    Route::get('/api/book_copies/{title}', [BookController::class, 'bookCopies']);
     //view - copy
     Route::get('/copy/new', [CopyController::class, 'newView']);
     Route::get('/copy/edit/{id}', [CopyController::class, 'editView']);
     Route::get('/copy/list', [CopyController::class, 'listView']); 
+});
+
+//SIMPLE USER
+Route::middleware(['auth.basic'])->group(function () {
+    
+    //user   
+    Route::apiResource('/api/users', UserController::class);
+    Route::patch('/api/users/password/{id}', [UserController::class, 'updatePassword']);
+    //queries
     //user lendings
-    Route::apiResource('/api/lendings', LendingController::class);
     Route::get('/api/user_lendings', [LendingController::class, 'userLendingsList']);
     Route::get('/api/user_lendings_count', [LendingController::class, 'userLendingsCount']);
-    //view
-    Route::get('/lending/new', [LendingController::class, 'newView']);
 });
 //csak a tesztelés miatt van "kint"
 Route::patch('/api/users/password/{id}', [UserController::class, 'updatePassword']);
