@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Copy;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CopyController extends Controller
 {
@@ -47,6 +48,59 @@ class CopyController extends Controller
     public function copies_pieces($title)
     {	
         $copies = Book::with('copy_c')->where('title','=', $title)->count();
+        return $copies;
+    }
+    public function bookCopyCount($title){
+        $copies = DB::table('copies as c')
+        ->join('books as b', 'c.book_id','=','b.book_id')
+        ->where('b.title','=', $title)
+        ->count();
+        return $copies;
+    }
+    public function hardCover($hardCover){
+        $copies = DB::table('copies as c')
+        ->select('b.author', 'b.title')
+        ->join('books as b', 'c.book_id', '=', 'b.book_id')
+        ->where('c.hardcovered', '=', $hardCover)
+        ->get();
+        return $copies;
+    }
+
+    public function kiadasEV($ev){
+        $copies = DB::table('copies as c')
+        ->select('b.author', 'b.title')
+        ->join('books as b', 'c.book_id', '=', 'b.book_id')
+        ->where('c.publication', '=', $ev)
+        ->get();
+        return $copies;
+    }
+
+
+    public function raktarBan(){
+        $copies = DB::table('copies as c')
+        ->where('c.status', '=', 0)
+        ->orwhere('c.status', '=', 2)
+        ->count();
+        return $copies;
+    }
+
+    public function bizonyosRaktar($ev,$id){
+        $copies = DB::table('copies as c')
+        ->where('c.publication', '=', $ev)
+        ->where('c.book_id', '=', $id)
+        ->where('c.status', '=', 0)
+        ->orwhere('c.status', '=', 2)
+        ->count();
+        return $copies;
+    }
+
+    public function adottKony($id){
+        $copies = DB::table('copies as c')
+        ->select('l.user_id', 'l.start')
+        ->join('lendings as l', 'c.copy_id', '=', 'l.copy_id')
+        ->where('c.book_id', '=', $id)
+        //->where('c.copy_id', '=', 'l.copy_id')
+        ->get();
         return $copies;
     }
 

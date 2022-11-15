@@ -28,6 +28,7 @@ Route::get('/dashboard', function () {
 //ADMIN
 Route::middleware( ['admin'])->group(function () {
     //books
+    
     Route::get('/api/books/{id}', [BookController::class, 'show']);
     Route::post('/api/books', [BookController::class, 'store']);
     Route::put('/api/books/{id}', [BookController::class, 'update']);
@@ -46,6 +47,7 @@ Route::middleware( ['admin'])->group(function () {
 Route::middleware(['auth.basic'])->group(function () {
     
     //user   
+    Route::get('/api/books/', [BookController::class, 'index']);
     Route::apiResource('/api/users', UserController::class);
     Route::patch('/api/users/password/{id}', [UserController::class, 'updatePassword']);
     //queries
@@ -62,5 +64,11 @@ Route::put('/api/lendings/{user_id}/{copy_id}/{start}', [LendingController::clas
 Route::patch('/api/lendings/{user_id}/{copy_id}/{start}', [LendingController::class, 'update']);
 Route::post('/api/lendings', [LendingController::class, 'store']);
 Route::delete('/api/lendings/{user_id}/{copy_id}/{start}', [LendingController::class, 'destroy']);
+Route::get('/api/book_copy_count/{title}',[CopyController::class, 'bookCopyCount']);
+Route::get('api/hard_cover/{hardcovered}', [CopyController::class, 'hardCover']);
+Route::get('/api/publcitaion_date/{publication}',[CopyController::class, 'kiadasEv']);
+Route::get('/api/raktar/', [CopyController::class, 'raktarBan']);
+Route::get('/api/raktaros/{ev}/{id}',[CopyController::class, 'bizonyosRaktar']);
+Route::get('/api/kiadott/{id}', [CopyController::class, 'adottKony']);
 
 require __DIR__.'/auth.php';
