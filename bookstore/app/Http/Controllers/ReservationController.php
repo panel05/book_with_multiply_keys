@@ -55,10 +55,18 @@ class ReservationController extends Controller
 
 
     public function older(){
+        //route missing
         $user = Auth::user();
         $reservations = DB::table('reservations as r')
         ->where('r.user_id', $user->id)
         ->count();
         return $reservations;
+    }
+
+
+    //Bejelentkezett felhasználó azon kölcsönzéseit add meg (copy_id és db), ahol egy példányt legalább db-szor (paraméteres fg) kölcsönzött ki! (együtt)
+    public function reserveCount(){
+        //route missing
+        
     }
 }
